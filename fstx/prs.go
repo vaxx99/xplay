@@ -112,73 +112,11 @@ func Ex(e error) {
 
 // HTML Generate page
 func HTML(fss [20]Fsto) string {
-	const tpl = `
-		<html>
-		<head>
-		<title>FS.TO!</title>
-		<style type="text/css">
-	body {  width: 100%;
-	        height: 100%;
-			margin-top: 0;
-			margin-left: 0;
-			margin-right: 0;
-			margin-bottom: 0;
-			padding: 0;
-			background: #4e4747; }
-    table {
-    	width: 100%; /* Ширина таблицы */
-		border-collapse: collapse; /* Убираем двойные линии между ячейками */
-    	font-family:Arial;
-    	font-size:12;
-   	}
-   th {
-    padding: 2px; /* Поля вокруг содержимого таблицы */
-    border: 1px solid black; /* Параметры рамки */
-    font-family:Arial;
-    font-size:12;
-   }
-   td {
-    padding: 2px; /* Поля вокруг содержимого таблицы */
-    border: 1px solid black; /* Параметры рамки */
-    font-family:Arial;
-    font-size:12;
-   }
-   h1 {
-    margin: 0;
-    color:rgb(140, 140, 140);
-    font-family:Arial;
-    font-size:16;
-    text-align:center;
-   }
-</style>
-<script>
-<!--
-//enter refresh time in "minutes:seconds" Minutes should range from 0 to inifinity. Seconds should range from 0 to 59
-var limit="2:00"
-if (document.images){
-	var parselimit=limit.split(":")
-	parselimit=parselimit[0]*60+parselimit[1]*1
-}
-function beginrefresh(){
-	if (!document.images)
-		return
-	if (parselimit==1)
-		window.location.reload()
-	else{
-		parselimit-=1
-		curmin=Math.floor(parselimit/60)
-		cursec=parselimit%60
-		if (curmin!=0)
-			curtime=curmin+" мин. "+cursec+" сек. до обновления!"
-		else
-			curtime=cursec+" сек. до обновления!"
-		window.status=curtime
-		setTimeout("beginrefresh()",1000)
-	}
-}
-window.onload=beginrefresh
-//-->
-</script>
+	const tpl = `<html>
+<head>
+<title>FS.TO!</title>
+<script src="/src/refresh.js"></script>
+<link href="/css/style.css" rel="stylesheet">
 </head>
 <body>
 <h1>Новое на портале FS.TO!</h1>
