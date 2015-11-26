@@ -1,2 +1,2 @@
-# fsto
-Fsto parsing project!
+# FSTO
+FSTO parsing project!
