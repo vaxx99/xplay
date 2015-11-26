@@ -1,0 +1,7 @@
+[user]
+	name = vaxx99
+	email = vaxx99@users.noreply.github.com
+[credential]
+	helper = cache
+[push]
+	default = simple
