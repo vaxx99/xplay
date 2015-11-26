@@ -7,13 +7,16 @@ import (
 	"net/http"
 )
 
-func Home(w http.ResponseWriter, req *http.Request) {
+// Fsto server
+func Fsto(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "%s",
 		fstx.HTML(fstx.Pars()))
 }
 
 func main() {
-	http.HandleFunc("/", Home)
+	http.HandleFunc("/", Fsto)
+	http.Handle("/src/", http.StripPrefix("/src/", http.FileServer(http.Dir("src"))))
+	http.Handle("/css/", http.StripPrefix("/css/", http.FileServer(http.Dir("css"))))
 	err := http.ListenAndServe(":8000", nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
