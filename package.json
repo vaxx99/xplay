@@ -4,9 +4,13 @@
   "main": "./main.js",
   "scripts": {
     "start": "electron .",
-    "package":"electron-packager ~/.go/src/fsto fsto --platform=linux --arch=ia32 --icon=./fsto.ico --ignore=\"node_modules/(electron-packager|electron-prebuilt)\" --version=0.35.1 --overwrite",
+    "package":"electron-packager ~/.go/src/fsto fsto --platform=linux --arch=ia32 --ignore=\"node_modules/(electron-packager|electron-prebuilt)\" --version=0.35.1 --overwrite",
     "build": "go build -o fsts fsts.go",
-    "install": "rm -rf ~/.elc/apps/fsto | mv fstm-* ~/.elc/apps/fsto"
+    "install": "rm -rf ~/.elc/apps/fsto | mv fsto-* ~/.elc/apps/fsto"
 },
-    "file": "./fsts"
+"files": [
+"/fsts",
+"/src/refresh.js",
+"/css/style.css"
+]
 }
