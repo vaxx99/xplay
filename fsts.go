@@ -9,8 +9,9 @@ import (
 
 // Fsto server
 func Fsto(w http.ResponseWriter, req *http.Request) {
-	fmt.Fprintf(w, "%s",
-		fstx.HTML(fstx.Pars()))
+	a := fstx.B{}
+	b := a.Mproc()
+	fmt.Fprintf(w, "%s", b.Hproc())
 }
 
 func main() {

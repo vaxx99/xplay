@@ -11,21 +11,65 @@ import (
 	"github.com/moovweb/gokogiri/xpath"
 )
 
-// Fsto Data structure
-type Fsto struct {
-	A string
-	B string
-	C string
-	D string
-	E string
+//A lll
+type A struct {
+	A, B, C, D, E string
 }
 
-//Pars Parsing data from fs.to
-func Pars() [20]Fsto {
+//B lll
+type B struct {
+	A [20]A
+}
 
-	fss := [20]Fsto{}
+func (s *B) proc(i int, fn, sf string) *B {
+	switch fn {
+	case "A":
+		s.A[i].A = sf
+	case "B":
+		s.A[i].B = sf
+	case "C":
+		s.A[i].C = sf
+	case "D":
+		s.A[i].D = sf
+	case "E":
+		s.A[i].E = sf
+	}
+	return s
+}
 
-	// fetch and read a web page
+func (ss *B) Hproc() string {
+	const tpl = `<html>
+<head>
+<title>FS.TO!</title>
+<script src="/src/refresh.js"></script>
+<link href="/css/style.css" rel="stylesheet">
+</head>
+<body>
+<h1>Новое на портале FS.TO!</h1>
+<table>`
+	clr := map[string]string{
+		"Сериалы": "RGB(255,250,205)",
+		"Фильмы":  "RGB(135,206,250)",
+		"0":       "RGB(248,248,255)",
+	}
+
+	s := tpl
+	tr := ""
+
+	for _, x := range ss.A {
+		if len(clr[x.B]) > 0 {
+			tr = "<tr style=\"background-color:" + clr[x.B] + "\">"
+		} else {
+			tr = "<tr style=\"background-color:" + clr["0"] + "\">"
+		}
+
+		s += tr + "<td>" + x.A + "</td><td>" + x.C + "</td><td>" + x.B + "</td><td>" + x.E + "</td><td>" + x.D + "</td></tr>\n"
+	}
+	s += "</table></body></html>\n"
+	return s
+}
+
+func (a *B) Mproc() *B {
 	resp, e := http.Get("http://fs.to")
 	Ex(e)
 	page, e := ioutil.ReadAll(resp.Body)
@@ -60,8 +104,9 @@ func Pars() [20]Fsto {
 			s0 := s[:j]
 			s1 := s[j:]
 			s1 = strings.Replace(s1, "\n", "", -1)
-			fss[i].D = s1
-			fss[i].E = s0
+			a.proc(i, "D", s1)
+			a.proc(i, "E", s0)
+
 		} else {
 			s := r3[i].Content()
 			j := strings.Index(s, "\n")
@@ -69,37 +114,37 @@ func Pars() [20]Fsto {
 			s = strings.Replace(s, " ", "", -1)
 			if j == 0 {
 				s = s[j:]
-				fss[i].D = s
-				fss[i].E = "*"
+				a.proc(i, "D", s)
+				a.proc(i, "E", "")
 			} else {
 				s = s[:j]
-				fss[i].D = "*"
-				fss[i].E = s
+				a.proc(i, "D", "")
+				a.proc(i, "E", s)
 			}
 		}
 	}
 
 	//Time
 	for i, xx := range r0 {
-		fss[i].A = strings.Replace(xx.String(), "сегодня", "", -1)
+		a.proc(i, "A", strings.Replace(xx.String(), "сегодня", "", -1))
 	}
 
 	//Type
 	for i, xx := range r1 {
-		fss[i].B = xx.String()
+		a.proc(i, "B", xx.String())
 	}
 
 	//Name
 	j := 0
 	for i, xx := range r2 {
 		if i%2 != 0 {
-			fss[j].C = xx.String()
+			a.proc(j, "C", xx.String())
 			j++
 		}
 	}
 
 	defer doc.Free()
-	return fss
+	return a
 }
 
 // Ex - error handler
@@ -108,37 +153,4 @@ func Ex(e error) {
 		fmt.Println("Error:", e)
 		os.Exit(3)
 	}
-}
-
-// HTML Generate page
-func HTML(fss [20]Fsto) string {
-	const tpl = `<html>
-<head>
-<title>FS.TO!</title>
-<script src="/src/refresh.js"></script>
-<link href="/css/style.css" rel="stylesheet">
-</head>
-<body>
-<h1>Новое на портале FS.TO!</h1>
-<table>`
-	clr := map[string]string{
-		"Сериалы": "RGB(255,250,205)",
-		"Фильмы":  "RGB(135,206,250)",
-		"0":       "RGB(248,248,255)",
-	}
-
-	s := tpl
-	tr := ""
-
-	for _, x := range fss {
-		if len(clr[x.B]) > 0 {
-			tr = "<tr style=\"background-color:" + clr[x.B] + "\">"
-		} else {
-			tr = "<tr style=\"background-color:" + clr["0"] + "\">"
-		}
-
-		s += tr + "<td>" + x.A + "</td><td>" + x.C + "</td><td>" + x.B + "</td><td>" + x.E + "</td><td>" + x.D + "</td></tr>\n"
-	}
-	s += "</table></body></html>\n"
-	return s
 }
