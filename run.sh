@@ -1,5 +1,5 @@
 #!/bin/bash
 
-rm fsto
+#rm fsto
 npm run build
 npm run start

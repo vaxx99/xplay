@@ -16,7 +16,7 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
     mainWindow = new BrowserWindow({width: 750,
                                     height: 399,
-				                            'use-content-size': true,
+                                   'use-content-size': true,
                                     darkTheme:true,
                                     frame: false,
                                     autosize: 1,
@@ -26,7 +26,7 @@ app.on('ready', function() {
     mainWindow.setTitle("Fsto.tv");
     mainWindow.setAlwaysOnTop(false);
     //mainWindow.openDevTools();
-    mainWindow.loadUrl('http://localhost:8000');
+    mainWindow.loadUrl('http://localhost:8000/fsto');
 
   // Emitted when the window is closed.
   var ret = globalShortcut.register('ctrl+w', function() {
