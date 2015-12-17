@@ -4,12 +4,12 @@
   "main": "./main.js",
   "scripts": {
     "start": "electron .",
-    "package":"electron-packager ~/.go/src/fsto fsto --platform=linux --arch=x64 --ignore=\"node_modules/(electron-packager|electron-prebuilt)\" --version=0.35.1 --overwrite",
-    "build": "go build -o fsts fsts.go",
+    "package":"electron-packager ~/.go/src/fsto fsto --platform=linux --arch=ia32 --ignore=\"node_modules/(electron-packager|electron-prebuilt)\" --version=0.36.0 --overwrite",
+    "build": "go build -o fsto main.go",
     "install": "rm -rf ~/.elc/apps/fsto | mv fsto-* ~/.elc/apps/fsto"
 },
 "files": [
-"/fsts",
+"/fsto",
 "/src/refresh.js",
 "/css/style.css"
 ]

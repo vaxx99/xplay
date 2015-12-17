@@ -2,7 +2,7 @@ var app = require('app');
 var BrowserWindow = require('browser-window');
 require('crash-reporter').start();
 var mainWindow = null;
-var subgo = require('child_process').spawn(__dirname+'/fsts');
+var subgo = require('child_process').spawn(__dirname+'/fsto');
 
 const electron = require('electron');
 const globalShortcut = electron.globalShortcut;
@@ -16,6 +16,7 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
     mainWindow = new BrowserWindow({width: 750,
                                     height: 399,
+				                            'use-content-size': true,
                                     darkTheme:true,
                                     frame: false,
                                     autosize: 1,

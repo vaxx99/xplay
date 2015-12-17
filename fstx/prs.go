@@ -41,8 +41,8 @@ func (ss *B) Hproc() string {
 	const tpl = `<html>
 <head>
 <title>FS.TO!</title>
-<script src="/src/refresh.js"></script>
-<link href="/css/style.css" rel="stylesheet">
+<script src="./src/refresh.js"></script>
+<link href="./css/style.css" rel="stylesheet">
 </head>
 <body>
 <h1>Новое на портале FS.TO!</h1>
