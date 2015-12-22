@@ -2,7 +2,7 @@ var app = require('app');
 var BrowserWindow = require('browser-window');
 require('crash-reporter').start();
 var mainWindow = null;
-var subgo = require('child_process').spawn(__dirname+'/fsto');
+var subgo = require('child_process').spawn(__dirname+'/fsts');
 
 const electron = require('electron');
 const globalShortcut = electron.globalShortcut;
@@ -25,9 +25,9 @@ app.on('ready', function() {
     mainWindow.setMenuBarVisibility(false);
     mainWindow.setTitle("Fsto.tv");
     mainWindow.setAlwaysOnTop(false);
-    //mainWindow.openDevTools();
-    mainWindow.loadUrl('http://localhost:8000/fsto');
-
+ // mainWindow.openDevTools();
+    mainWindow.loadUrl('http://localhost:8000/x');
+  var wc = mainWindow.webContents;
   // Emitted when the window is closed.
   var ret = globalShortcut.register('ctrl+w', function() {
     subgo.kill('SIGINT');
@@ -38,7 +38,7 @@ app.on('ready', function() {
   }
 
   var h = globalShortcut.register('ctrl+`', function() {
-      if (mainWindow.isVisible()){mainWindow.hide();} else {mainWindow.show();}
+      if (mainWindow.isVisible()){mainWindow.hide();} else {wc.reloadIgnoringCache();mainWindow.show();}
   });
 
   // Check whether a shortcut is registered.

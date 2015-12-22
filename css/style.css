@@ -9,25 +9,25 @@ body {  width: 100%;
 table {
 	width: 100%; /* Ширина таблицы */
 	border-collapse: collapse; /* Убираем двойные линии между ячейками */
-	font-family:Arial;
-	font-size:12;
+	font-family: 'Arial';
+	font-size: 8pt;
     }
 th {
 	padding: 2px; /* Поля вокруг содержимого таблицы */
 	border: 1px solid black; /* Параметры рамки */
-	font-family:Arial;
-	font-size:12;
+	font-family: 'Arial';
+	font-size: 8pt;
     }
 td {
 	padding: 2px; /* Поля вокруг содержимого таблицы */
 	border: 1px solid black; /* Параметры рамки */
-	font-family:Arial;
-	font-size:12;
+	font-family: 'Arial';
+	font-size: 8pt;
     }
 h1 {
 	margin: 0;
-	color:rgb(140, 140, 140);
-	font-family:Arial;
-	font-size:16;
-	text-align:center;
+	color: rgb(140, 140, 140);
+	font-family: 'Arial';
+	font-size: 12pt;
+	text-align: center;
     }
