@@ -1,8 +1,8 @@
 var app = require('app');
 var BrowserWindow = require('browser-window');
-require('crash-reporter').start();
+//var cr = require('crash-reporter').start();
 var mainWindow = null;
-var subgo = require('child_process').spawn(__dirname+'/fsts');
+//var subgo = require('child_process').spawn(__dirname+'/fsts');
 
 const electron = require('electron');
 const globalShortcut = electron.globalShortcut;
@@ -23,14 +23,14 @@ app.on('ready', function() {
                                     x: 0,
                                     y: 0});
     mainWindow.setMenuBarVisibility(false);
-    mainWindow.setTitle("Fsto.tv");
+    mainWindow.setTitle("Fsto!");
     mainWindow.setAlwaysOnTop(false);
  // mainWindow.openDevTools();
-    mainWindow.loadUrl('http://localhost:8000/x');
+    mainWindow.loadURL('http://localhost:8000/x');
   var wc = mainWindow.webContents;
   // Emitted when the window is closed.
   var ret = globalShortcut.register('ctrl+w', function() {
-    subgo.kill('SIGINT');
+//    subgo.kill('SIGINT');
     app.quit();
   });
   if (!ret) {
@@ -54,7 +54,7 @@ app.on('will-quit', function() {
   globalShortcut.unregisterAll();
   mainWindow.on('closed', function() {
     mainWindow = null;
-    if (subgo){subgo.kill('SIGINT')}
+//    if (subgo){subgo.kill('SIGINT')}
     app.quit();
   });
 });
