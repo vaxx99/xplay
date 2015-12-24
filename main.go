@@ -12,7 +12,7 @@ import (
 func Fsto(w http.ResponseWriter, req *http.Request) {
 	a := fstx.B{}
 	b := a.Mproc()
-	log.Print(req,"\n\n")
+//	log.Print(req,"\n\n")
 	fmt.Fprintf(w, "%s", b.Hproc())
 }
 

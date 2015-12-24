@@ -2,7 +2,7 @@ var app = require('app');
 var BrowserWindow = require('browser-window');
 //var cr = require('crash-reporter').start();
 var mainWindow = null;
-//var subgo = require('child_process').spawn(__dirname+'/fsts');
+var fsts = require('child_process').spawn(__dirname+'/fsts');
 
 const electron = require('electron');
 const globalShortcut = electron.globalShortcut;
@@ -30,7 +30,7 @@ app.on('ready', function() {
   var wc = mainWindow.webContents;
   // Emitted when the window is closed.
   var ret = globalShortcut.register('ctrl+w', function() {
-//    subgo.kill('SIGINT');
+    fsts.kill('SIGINT');
     app.quit();
   });
   if (!ret) {
@@ -54,7 +54,7 @@ app.on('will-quit', function() {
   globalShortcut.unregisterAll();
   mainWindow.on('closed', function() {
     mainWindow = null;
-//    if (subgo){subgo.kill('SIGINT')}
+    if (fsts){fsts.kill('SIGINT')}
     app.quit();
   });
 });
