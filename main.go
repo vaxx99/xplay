@@ -16,6 +16,7 @@ func Fsto(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "%s", b.Hproc())
 }
 
+
 func main() {
     wd,_ := os.Getwd()
     http.HandleFunc("/", Fsto)
@@ -25,4 +26,3 @@ func main() {
 	log.Fatal("ListenAndServe: ", err)
     }
 }
-
