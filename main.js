@@ -15,7 +15,7 @@ app.on('window-all-closed', function() {
 
 app.on('ready', function() {
     mainWindow = new BrowserWindow({width: 750,
-                                    height: 399,
+                                    height: 359,
                                    'use-content-size': true,
                                     darkTheme:true,
                                     frame: false,

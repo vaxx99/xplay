@@ -8,4 +8,10 @@
     "build": "go build -o fsts main.go",
     "install": "rm -rf ~/.elc/apps/fsto | mv fsto-* ~/.elc/apps/fsto"
 }
+,
+"files": [
+"/fsts",
+"/css/style.css"
+]
 }
+

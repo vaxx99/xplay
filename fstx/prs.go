@@ -42,7 +42,41 @@ func (ss *B) Hproc() string {
 <html>
 <head>
 <title>FS.TO!</title>
-<link href="/css/style.css" rel="stylesheet">
+<style>
+body {  width: 100%;
+    height: 100%;
+    margin-top: 0;
+    margin-left: 0;
+    margin-right: 0;
+    margin-bottom: 0;
+    padding: 0;
+    background: #4e4747; }
+table {
+    width: 100%; /* Ширина таблицы */
+    border-collapse: collapse; /* Убираем двойные линии между ячейками */
+    font-family: 'Arial';
+    font-size: 8pt;
+    }
+th {
+    padding: 2px; /* Поля вокруг содержимого таблицы */
+    border: 1px solid black; /* Параметры рамки */
+    font-family: 'Arial';
+    font-size: 8pt;
+    }
+td {
+    padding: 2px; /* Поля вокруг содержимого таблицы */
+    border: 1px solid black; /* Параметры рамки */
+    font-family: 'Arial';
+    font-size: 8pt;
+    }
+h1 {
+    margin: 0;
+    color: rgb(140, 140, 140);
+    font-family: 'Arial';
+    font-size: 12pt;
+    text-align: center;
+    }
+</style>
 </head>
 <body>
 <h1>Новое на портале FS.TO!</h1>
