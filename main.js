@@ -17,6 +17,7 @@ app.on('ready', function() {
     mainWindow = new BrowserWindow({width: 750,
                                     height: 359,
                                    'use-content-size': true,
+                                   'skip-taskbar': true,
                                     darkTheme:true,
                                     frame: false,
                                     autosize: 1,
