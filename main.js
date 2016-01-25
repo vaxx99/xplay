@@ -1,7 +1,7 @@
 var app = require('app');
-var BrowserWindow = require('browser-window');
+var bw = require('browser-window');
 //var cr = require('crash-reporter').start();
-var mainWindow = null;
+var mw = null;
 var fsts = require('child_process').spawn(__dirname+'/fsts');
 
 const electron = require('electron');
@@ -14,21 +14,24 @@ app.on('window-all-closed', function() {
 
 
 app.on('ready', function() {
-    mainWindow = new BrowserWindow({width: 750,
-                                    height: 359,
-                                   'use-content-size': true,
-                                   'skip-taskbar': true,
-                                    darkTheme:true,
-                                    frame: false,
-                                    autosize: 1,
-                                    x: 0,
-                                    y: 0});
-    mainWindow.setMenuBarVisibility(false);
-    mainWindow.setTitle("Fsto!");
-    mainWindow.setAlwaysOnTop(false);
- // mainWindow.openDevTools();
-    mainWindow.loadURL('http://localhost:8000/x');
-  var wc = mainWindow.webContents;
+    mw = new bw({width: 750,
+                height: 359,
+                useContentSize: true,
+                skipTaskbar: true,
+                resizable: false,
+                icon: __dirname+'/fsto.png',
+                darkTheme: true,
+                frame: false,
+                autosize: true,
+                x: 0,
+                y: 0});
+    mw.setMenuBarVisibility(false);
+    mw.setTitle("Fsto!");
+    mw.setAlwaysOnTop(false);
+ // mw.openDevTools();
+    mw.loadURL('http://localhost:8000/x');
+  var wc = mw.webContents;
+   //console.log(wc);
   // Emitted when the window is closed.
   var ret = globalShortcut.register('ctrl+w', function() {
     fsts.kill('SIGINT');
@@ -40,7 +43,7 @@ app.on('ready', function() {
 
   var h = globalShortcut.register('ctrl+`', function() {
   // wc.reloadIgnoringCache()
-      if (mainWindow.isVisible()){mainWindow.hide();} else {mainWindow.show();wc.reload();}
+      if (mw.isVisible()){mw.hide();} else {mw.show();wc.reload();}
   });
 
   // Check whether a shortcut is registered.
@@ -54,8 +57,8 @@ app.on('will-quit', function() {
 
   // Unregister all shortcuts.
   globalShortcut.unregisterAll();
-  mainWindow.on('closed', function() {
-    mainWindow = null;
+  mw.on('closed', function() {
+    mw = null;
     if (fsts){fsts.kill('SIGINT')}
     app.quit();
   });

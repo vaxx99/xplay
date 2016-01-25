@@ -77,6 +77,16 @@ h1 {
     text-align: center;
     }
 </style>
+<script>
+<!--
+function autoRefresh()
+{
+window.location = window.location.href;
+}
+ 
+setInterval('autoRefresh()', 600000);
+//-->
+</script>
 </head>
 <body>
 <h1>Новое на портале FS.TO!</h1>
