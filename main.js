@@ -40,7 +40,7 @@ app.on('ready', function() {
 
   var h = globalShortcut.register('ctrl+`', function() {
   // wc.reloadIgnoringCache()
-      if (mainWindow.isVisible()){wc.reload();mainWindow.hide();} else {mainWindow.show();wc.reload();}
+      if (mainWindow.isVisible()){mainWindow.hide();} else {mainWindow.show();wc.reload();}
   });
 
   // Check whether a shortcut is registered.
