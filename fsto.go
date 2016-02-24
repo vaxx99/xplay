@@ -87,11 +87,11 @@ func page() string {
 		t4 := s.Find(".b-main__new-item-description").Text()
 		t4 = strings.Replace(t4, "\n", "", 1)
 		t4 = strings.Replace(t4, "\"", "", -1)
-		t := strings.Replace(t3, "\n", "", 1)
-		ss := strings.Replace(t, " ", "", -1)
-		j := strings.Index(ss, "\n")
-		s0 := ss[:j]
-		s1 := ss[j:]
+		t3 = strings.Replace(t3, "\n", "", 1)
+		t3 = strings.Replace(t3, " ", "", -1)
+		j := strings.Index(t3, "\n")
+		s0 := t3[:j]
+		s1 := t3[j:]
 		s1 = strings.Replace(s1, "\n", "", -1)
 		//color
 		if len(clr[t2]) > 0 {
@@ -106,6 +106,7 @@ func page() string {
 	return pg
 }
 
+//Fsto server
 func Fsto(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "%s", page())
 }
