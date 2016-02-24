@@ -14,7 +14,7 @@ app.on('window-all-closed', function() {
 
 
 app.on('ready', function() {
-    mw = new bw({width: 750,
+    mw = new bw({width: 800,
                 height: 359,
                 useContentSize: true,
                 skipTaskbar: true,
