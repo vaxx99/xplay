@@ -18,7 +18,7 @@ app.on('ready', function() {
                 height: 359,
                 useContentSize: true,
                 skipTaskbar: true,
-                resizable: false,
+                resizable: true,
                 icon: __dirname+'/fsto.png',
                 darkTheme: true,
                 frame: false,
