@@ -13,7 +13,7 @@ const tpl = `<!doctype html>
 <html>
 <head>
 <meta charset="utf-8">
-<title>FS.TO!</title>
+<title>Fs.life!</title>
 <style>
 body {  width: 100%;
 	height: 100%;
@@ -60,7 +60,7 @@ setInterval('autoRefresh()', 600000);
 </script>
 </head>
 <body>
-<h1>Новое на портале FS.TO!</h1>
+<h1>Новое на портале Fs.life!</h1>
 <table>`
 
 func page() string {
@@ -74,7 +74,7 @@ func page() string {
 	pg := tpl
 	tr := ""
 
-	doc, err := goquery.NewDocument("https://fs.to")
+	doc, err := goquery.NewDocument("http://fs.life")
 	if err != nil {
 		log.Fatal(err)
 	}

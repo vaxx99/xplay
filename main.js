@@ -1,10 +1,15 @@
-var app = require('app');
-var bw = require('browser-window');
+const electron = require('electron')
+// Module to control application life.
+const app = electron.app
+// Module to create native browser window.
+const bw = electron.BrowserWindow
+
+
 //var cr = require('crash-reporter').start();
-var mw = null;
+let mw
+
 var fsts = require('child_process').spawn(__dirname+'/fsts');
 
-const electron = require('electron');
 const globalShortcut = electron.globalShortcut;
 
 
@@ -26,7 +31,7 @@ app.on('ready', function() {
                 x: 0,
                 y: 0});
     mw.setMenuBarVisibility(false);
-    mw.setTitle("Fsto!");
+    mw.setTitle("Fs.life!");
     mw.setAlwaysOnTop(false);
  // mw.openDevTools();
     mw.loadURL('http://localhost:8000/x');
