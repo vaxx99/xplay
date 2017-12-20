@@ -1,27 +1,19 @@
 package main
 
 import (
-	"github.com/gotk3/gotk3/gtk"
 	"log"
-
-	"github.com/vaxx99/play/stream"
 	"os"
-
 	"time"
-
 	"bufio"
-	"fmt"
 	"io"
-	"net"
 	"net/http"
-	"net/url"
 	"strings"
-
-	"github.com/gotk3/gotk3/pango"
 	"sync"
-
 	"os/exec"
 	"strconv"
+	"github.com/vaxx99/play/stream"
+	"github.com/gotk3/gotk3/gtk"
+	"github.com/gotk3/gotk3/pango"
 )
 
 type Labels struct {
@@ -31,25 +23,25 @@ type Labels struct {
 func main() {
 	gtk.Init(nil)
 
-	check := func(m string,e error) {
+	check := func(m string, e error) {
 		if e != nil {
-			log.Println(m,e)
+			log.Println(m, e)
 		}
 	}
 
 	win, e := gtk.WindowNew(gtk.WINDOW_TOPLEVEL)
-	check("",e)
+	check("", e)
 	win.SetSkipTaskbarHint(true)
 
 	//Linux screen resolution
-	out,_:=exec.Command("xdpyinfo").Output()
-	dpi:=string(out)
-	dpi=dpi[strings.Index(dpi,"dimensions:")+len("dimensions:"):strings.Index(dpi,"pixels")]
-	a:=strings.Split(dpi,"x")
-	W,e:=strconv.Atoi(strings.TrimSpace(a[0]))
-	H,e:=strconv.Atoi(strings.TrimSpace(a[1]))
-	check("Resolution:",e)
-	if e!=nil{
+	out, _ := exec.Command("xdpyinfo").Output()
+	dpi := string(out)
+	dpi = dpi[strings.Index(dpi, "dimensions:")+len("dimensions:") : strings.Index(dpi, "pixels")]
+	a := strings.Split(dpi, "x")
+	W, e := strconv.Atoi(strings.TrimSpace(a[0]))
+	H, e := strconv.Atoi(strings.TrimSpace(a[1]))
+	check("Resolution:", e)
+	if e != nil {
 		W, H = 1024, 768
 	}
 
@@ -59,22 +51,12 @@ func main() {
 	})
 
 	provider, _ := gtk.CssProviderNew()
-	provider.LoadFromData(`@define-color base #333;@define-color fore #ccc;@define-color diff #555;
-*{background-color: @base;border:0;}
-.container{color: @fore;border:1px solid @base;}
-.plus{color: @fore;border:0;font-size:20px;}
-.station{color:@fore;border:0;font-size:10px;}
-.bitrate{color:#ccc;border:0;font-size:10px;}
-.timer{color:#ccc;border:0;font-size:10px;padding-right:5px;}
-.title{color:#cff;border:0;font-size:10px;font-style: italic;}
-.genre{color:#fcc;border:0;font-size:10px;}`)
-
+	provider.LoadFromData(`@define-color base #333;@define-color fore #ccc;@define-color diff #555;*{background-color: @base;border:0;}.container{color: @fore;border:1px solid @base;}.plus{color: @fore;border:0;font-size:20px;}.station{color:@fore;border:0;font-size:10px;}.bitrate{color:#ccc;border:0;font-size:10px;}.timer{color:#ccc;border:0;font-size:10px;padding-right:5px;}.title{color:#cff;border:0;font-size:10px;font-style: italic;}.genre{color:#fcc;border:0;font-size:10px;}`)
 	win.SetTitle("xPlay")
 	win.SetIconFromFile("fsto.png")
 	win.SetDefaultSize(400, 10)
 	win.SetResizable(false)
 	win.SetKeepAbove(true)
-
 
 	cont, _ := gtk.GridNew()
 	cont.SetRowHomogeneous(true)
@@ -173,9 +155,9 @@ func main() {
 		if run == 0 {
 			run = 1
 			uri, prx := cplay.SUrl, cplay.SProxy
-			hb, ha = TryOne(uri, prx)
+			hb, ha = stream.TryOne(uri, prx)
 			if ha == 0 {
-				hb, ha = TryTwo(uri, prx)
+				hb, ha = stream.TryTwo(uri, prx)
 			}
 			labs.Station.SetText(cplay.SName)
 			if hb.StatusCode == 200 && ha > 0 {
@@ -237,18 +219,18 @@ func main() {
 		if win.GetDecorated() == true {
 			win.SetDecorated(false)
 			if x < W/2 {
-				x=0
+				x = 0
 			}
 			if y < H/2 {
-				y=0
+				y = 0
 			}
-			if x > W/2{
-				x=W-w
+			if x > W/2 {
+				x = W - w
 			}
 			if y > H/2 {
-				y=H
+				y = H
 			}
-			win.Move(x,y)
+			win.Move(x, y)
 		} else {
 			win.Move(W/2-w/2, H/2-h/2)
 			win.SetDecorated(true)
@@ -297,6 +279,11 @@ type Titles struct {
 	Now *time.Time
 }
 
+type Data struct {
+	rdr  io.Reader
+	skip int
+}
+
 func (t *Titles) Update(wg *sync.WaitGroup, ch chan struct{}) {
 	select {
 	default:
@@ -313,24 +300,6 @@ func (t *Titles) Update(wg *sync.WaitGroup, ch chan struct{}) {
 func (L *Labels) Clear() {
 	L.Bitrate.SetText("")
 	L.Title.SetText("")
-}
-
-func ParseIcy(rdr *bufio.Reader, c byte) (string, error) {
-	numbytes := int(c) * 16
-	bytes := make([]byte, numbytes)
-	n, err := io.ReadFull(rdr, bytes)
-	if err != nil {
-		log.Panic(err)
-	}
-	if n != numbytes {
-		return "", nil
-	}
-	return strings.Split(strings.Split(string(bytes), "=")[1], ";")[0], nil
-}
-
-type Data struct {
-	rdr  io.Reader
-	skip int
 }
 
 func (d *Data) Update(wg *sync.WaitGroup, ch chan struct{}) <-chan string {
@@ -351,7 +320,7 @@ func (d *Data) Update(wg *sync.WaitGroup, ch chan struct{}) <-chan string {
 				log.Panic(err)
 			}
 			if c > 0 {
-				meta, err := ParseIcy(bufrdr, c)
+				meta, err := stream.ParseIcy(bufrdr, c)
 				if err != nil {
 					log.Panic(err)
 				}
@@ -369,79 +338,3 @@ func (d *Data) Update(wg *sync.WaitGroup, ch chan struct{}) <-chan string {
 	return dh
 }
 
-func TryOne(uri, proxy string) (*http.Response, int) {
-	client := &http.Client{}
-	trans := &http.Transport{}
-	proxyUrl, err := url.Parse(proxy)
-
-	if proxy != "" {
-		trans.Proxy = http.ProxyURL(proxyUrl)
-		client = &http.Client{Transport: trans}
-	}
-	req, err := http.NewRequest("GET", uri, nil)
-	if err != nil {
-		return &http.Response{}, 0
-	}
-	req.Header.Add("Icy-MetaData", "1")
-	resp, err := client.Do(req)
-	if err != nil {
-		return &http.Response{}, 0
-	}
-	amount := 0
-	if _, err = fmt.Sscan(resp.Header.Get("icy-metaint"), &amount); err != nil {
-		return &http.Response{}, 0
-	}
-
-	return resp, amount
-}
-
-func TryTwo(uri, proxy string) (*http.Response, int) {
-	trans := &http.Transport{
-		Dial: func(network, a string) (net.Conn, error) {
-			realConn, err := net.Dial(network, a)
-			if err != nil {
-				return nil, err
-			}
-			return &IcyCW{Conn: realConn}, nil
-		},
-	}
-	proxyUrl, err := url.Parse(proxy) //!
-	if err == nil {
-		trans.Proxy = http.ProxyURL(proxyUrl)
-	}
-	client := &http.Client{Transport: trans}
-	http.DefaultClient = client
-	req, err := http.NewRequest("GET", uri, nil)
-	if err != nil {
-		return &http.Response{}, 0
-	}
-	req.Header.Add("Icy-MetaData", "1")
-	resp, err := client.Do(req)
-	amount := 0
-	if _, err = fmt.Sscan(resp.Header.Get("icy-metaint"), &amount); err != nil {
-		return &http.Response{}, 0
-	}
-	return resp, amount
-}
-
-// ICY - Metadata
-type IcyCW struct {
-	net.Conn
-	haveReadAny bool
-}
-
-func (i *IcyCW) Read(b []byte) (int, error) {
-	if i.haveReadAny {
-		return i.Conn.Read(b)
-	}
-	i.haveReadAny = true
-	n, err := i.Conn.Read(b[:3])
-	if err != nil {
-		return n, err
-	}
-	if string(b[:3]) == "ICY" {
-		copy(b, []byte("HTTP/1.1"))
-		return 8, nil
-	}
-	return n, nil
-}
