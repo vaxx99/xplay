@@ -14,6 +14,7 @@ import (
 	"github.com/vaxx99/play/stream"
 	"github.com/gotk3/gotk3/gtk"
 	"github.com/gotk3/gotk3/pango"
+	"github.com/gotk3/gotk3/gdk"
 )
 
 type Labels struct {
@@ -45,29 +46,39 @@ func main() {
 		W, H = 1024, 768
 	}
 
-	win.SetSizeRequest(400, 10)
+	//win.SetSizeRequest(300, 12)
 	win.Connect("destroy", func() {
 		gtk.MainQuit()
 	})
 
+	win.Connect("key-press-event",func(win *gtk.Window,ev *gdk.Event){
+		keyEvent := &gdk.EventKey{ev}
+		if keyEvent.KeyVal() == gdk.KEY_Escape{
+			gtk.MainQuit()
+		}
+
+	})
+
 	provider, _ := gtk.CssProviderNew()
-	provider.LoadFromData(`@define-color base #333;@define-color fore #ccc;@define-color diff #555;*{background-color: @base;border:0;}.container{color: @fore;border:1px solid @base;}.plus{color: @fore;border:0;font-size:20px;}.station{color:@fore;border:0;font-size:10px;}.bitrate{color:#ccc;border:0;font-size:10px;}.timer{color:#ccc;border:0;font-size:10px;padding-right:5px;}.title{color:#cff;border:0;font-size:10px;font-style: italic;}.genre{color:#fcc;border:0;font-size:10px;}`)
+	provider.LoadFromData(`@define-color base #333;@define-color fore #ccc;@define-color diff #555;*{background-color: @base;border:0;}.container{color: @fore;border:1px solid @base;}.plus{color: @fore;border:0;font-size:20px;}.station{color:@fore;border:0;font-size:10px;}.bitrate{color:#ccc;border:0;font-size:10px;}.timer{color:#ccc;border:0;font-size:10px;padding-right:4px;}.title{color:#cff;border:0;font-size:10px;}.genre{color:#fcc;border:0;font-size:10px;}`)
 	win.SetTitle("xPlay")
 	win.SetIconFromFile("fsto.png")
-	win.SetDefaultSize(400, 10)
+	win.SetDefaultSize(300, 12)
 	win.SetResizable(false)
 	win.SetKeepAbove(true)
 
 	cont, _ := gtk.GridNew()
 	cont.SetRowHomogeneous(true)
-	cont.SetSizeRequest(400, 10)
+	cont.SetColumnSpacing(4)
+	cont.SetSizeRequest(300, 12)
+	cont.SetVExpand(false)
 
 	plus, _ := gtk.LabelNew("")
 	station, _ := gtk.LabelNew("")
 	bitrate, _ := gtk.LabelNew("")
 	genre, _ := gtk.LabelNew("")
 	title, _ := gtk.LabelNew("")
-	timer, _ := gtk.LabelNew("00:00:00")
+	timer, _ := gtk.LabelNew("00:00")
 
 	var labs = &Labels{plus, station, bitrate, genre, timer, title}
 
@@ -84,28 +95,31 @@ func main() {
 	Style(provider, &timer.Widget, "timer")
 	Style(provider, &plus.Widget, "plus")
 
-	plus.SetSizeRequest(20, 10)
-	station.SetSizeRequest(300, 10)
+	plus.SetSizeRequest(20, 12)
+	station.SetSizeRequest(230, 12)
 	station.SetXAlign(0)
-	bitrate.SetSizeRequest(40, 10)
-	bitrate.SetXAlign(0)
-	timer.SetSizeRequest(30, 10)
-	timer.SetXAlign(0)
-	title.SetSizeRequest(300, 10)
+	bitrate.SetSizeRequest(20, 12)
+	bitrate.SetXAlign(-1)
+	timer.SetSizeRequest(20, 12)
+	timer.SetXAlign(-1)
+	title.SetSizeRequest(230, 12)
 	title.SetXAlign(0)
 
 	station.SetMaxWidthChars(10)
 	station.SetEllipsize(pango.ELLIPSIZE_END)
 	station.SetJustify(gtk.JUSTIFY_LEFT)
 
+	title.SetLines(2)
 	title.SetMaxWidthChars(10)
-	title.SetEllipsize(pango.ELLIPSIZE_END)
-	title.SetJustify(gtk.JUSTIFY_LEFT)
+	title.SetLineWrap(true)
+	//title.SetEllipsize(pango.ELLIPSIZE_END)
+	title.SetJustify(gtk.JUSTIFY_CENTER)
 	title.SetVisible(false)
 
 	bitrate.SetMaxWidthChars(10)
 	bitrate.SetEllipsize(pango.ELLIPSIZE_END)
-	bitrate.SetJustify(gtk.JUSTIFY_LEFT)
+	bitrate.SetJustify(gtk.JUSTIFY_RIGHT)
+	timer.SetJustify(gtk.JUSTIFY_RIGHT)
 
 	ebox.Add(timer)
 	ubox.Add(station)
@@ -170,7 +184,7 @@ func main() {
 				wg.Add(1)
 				go titl.Update(&wg, ch)
 				labs.Count.SetMarkup("<span foreground='#0f0'>•</span>")
-				labs.Bitrate.SetMarkup("<span foreground='#ff0'>" + cplay.SBitr + "</span><span foreground='#cfc'> k</span>")
+				labs.Bitrate.SetMarkup("<span foreground='#ff0'>" + cplay.SBitr + "</span><span foreground='#cfc'>k</span>")
 				wg.Add(1)
 				go timr.Update(&wg, ch)
 				play.Player(cplay.SUrl)
@@ -262,11 +276,11 @@ func (t *Timer) Update(wg *sync.WaitGroup, ch chan struct{}) {
 		default:
 			time.Sleep(1 * time.Second)
 			dur := time.Since(t.Now)
-			tm, _ := time.Parse("150405", "000000")
+			tm, _ := time.Parse("0405", "0000")
 			tt := tm.Add(dur)
-			t.Lab.Timer.SetMarkup("<span foreground='#0f0'>" + tt.Format("15:04:05") + "</span>")
+			t.Lab.Timer.SetMarkup("<span foreground='#0ff'>" + tt.Format("04:05") + "</span>")
 		case <-ch:
-			t.Lab.Timer.SetText("00:00:00")
+			t.Lab.Timer.SetText("00:00")
 			wg.Done()
 			return
 		}
@@ -289,12 +303,28 @@ func (t *Titles) Update(wg *sync.WaitGroup, ch chan struct{}) {
 	default:
 		for meta := range t.Tch {
 			*t.Now = time.Now()
-			t.Lab.Title.SetText(meta)
+			xtx:=toUtf8([]byte(meta))
+			if len(xtx)>0{
+				xtx=strings.TrimLeft(xtx,"'")
+				xtx=strings.TrimRight(xtx,"'")
+				if strings.Contains(xtx,"&"){
+					xtx = strings.Replace(xtx, "&", "&amp;", -1)
+				}
+			}
+			t.Lab.Title.SetMarkup("<span color='#cff' font-style='italic'>"+xtx+"</span>")
 		}
 	case <-ch:
 		wg.Done()
 		return
 	}
+}
+
+func toUtf8(iso8859_1_buf []byte) string {
+	buf := make([]rune, len(iso8859_1_buf))
+	for i, b := range iso8859_1_buf {
+		buf[i] = rune(b)
+	}
+	return string(buf)
 }
 
 func (L *Labels) Clear() {
