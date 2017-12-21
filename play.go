@@ -46,7 +46,6 @@ func main() {
 		W, H = 1024, 768
 	}
 
-	//win.SetSizeRequest(300, 12)
 	win.Connect("destroy", func() {
 		gtk.MainQuit()
 	})
