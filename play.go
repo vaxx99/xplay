@@ -46,6 +46,7 @@ func main() {
 		W, H = 1024, 768
 	}
 
+	//win.SetSizeRequest(300, 12)
 	win.Connect("destroy", func() {
 		gtk.MainQuit()
 	})
@@ -278,7 +279,14 @@ func (t *Timer) Update(wg *sync.WaitGroup, ch chan struct{}) {
 			tm, _ := time.Parse("0405", "0000")
 			tt := tm.Add(dur)
 			t.Lab.Timer.SetMarkup("<span foreground='#0ff'>" + tt.Format("04:05") + "</span>")
+			ss:=dur.Seconds()
+			if int(ss)%2==0{
+				t.Lab.Count.SetMarkup("<span foreground='#0f0'>•</span>")
+			}else{
+				t.Lab.Count.SetMarkup("<span foreground='#ff0'>•</span>")
+			}
 		case <-ch:
+			t.Lab.Count.SetMarkup("<span foreground='#f00'>•</span>")
 			t.Lab.Timer.SetText("00:00")
 			wg.Done()
 			return
