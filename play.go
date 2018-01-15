@@ -109,10 +109,10 @@ func main() {
 	station.SetEllipsize(pango.ELLIPSIZE_END)
 	station.SetJustify(gtk.JUSTIFY_LEFT)
 
-	title.SetLines(2)
+	//title.SetLines(2)
 	title.SetMaxWidthChars(10)
-	title.SetLineWrap(true)
-	//title.SetEllipsize(pango.ELLIPSIZE_END)
+	title.SetLineWrap(false)
+	title.SetEllipsize(pango.ELLIPSIZE_END)
 	title.SetJustify(gtk.JUSTIFY_CENTER)
 	title.SetVisible(false)
 
